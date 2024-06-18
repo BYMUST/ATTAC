@@ -367,7 +367,7 @@ class Appr(Inc_Learning_Appr):
 
             if not self.sym:
                 # asym_choice = torch.nn.ReLU(inplace=True)
-                asym_choice = torch.nn.LeakyReLU(negative_slope=0.01, inplace=False)
+                asym_choice = torch.nn.LeakyReLU(negative_slope=0.05, inplace=True)
                 if normalize:
                     a = F.normalize(a, dim=1, p=2)
                     b = F.normalize(b, dim=1, p=2)
