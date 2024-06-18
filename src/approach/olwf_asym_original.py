@@ -340,6 +340,20 @@ class Appr(Inc_Learning_Appr):
             elif collapse_channels == "gap":
                 a = F.adaptive_avg_pool2d(a, (1, 1))[..., 0, 0]
                 b = F.adaptive_avg_pool2d(b, (1, 1))[..., 0, 0]
+            elif collapse_channels == "HMMP":
+                # 分层最大-平均池化
+                a_max_width = F.adaptive_max_pool2d(a, (1, a.shape[-1]))[..., 0, :]
+                a_mean_width = F.adaptive_avg_pool2d(a, (1, a.shape[-1]))[..., 0, :]
+                a_max_height = F.adaptive_max_pool2d(a, (a.shape[-2], 1))[..., :, 0]
+                a_mean_height = F.adaptive_avg_pool2d(a, (a.shape[-2], 1))[..., :, 0]
+            
+                b_max_width = F.adaptive_max_pool2d(b, (1, b.shape[-1]))[..., 0, :]
+                b_mean_width = F.adaptive_avg_pool2d(b, (1, b.shape[-1]))[..., 0, :]
+                b_max_height = F.adaptive_max_pool2d(b, (b.shape[-2], 1))[..., :, 0]
+                b_mean_height = F.adaptive_avg_pool2d(b, (b.shape[-2], 1))[..., :, 0]
+            
+                a = torch.cat([a_max_width, a_mean_width, a_max_height, a_mean_height], dim=-1)
+                b = torch.cat([b_max_width, b_mean_width, b_max_height, b_mean_height], dim=-1)
             elif collapse_channels == "spatial":
                 a_h = a.sum(dim=3).view(a.shape[0], -1)
                 b_h = b.sum(dim=3).view(b.shape[0], -1)
