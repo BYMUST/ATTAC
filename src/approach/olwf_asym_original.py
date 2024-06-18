@@ -373,13 +373,13 @@ class Appr(Inc_Learning_Appr):
                 diff = a-b
                 relu_out = asym_choice(diff)  
                 layer_loss = torch.mean(torch.frobenius_norm(relu_out, dim=-1))
-                print("ReLU")
+                # print("ReLU")
             else:
                 if normalize:
                     a = F.normalize(a, dim=1, p=2)
                     b = F.normalize(b, dim=1, p=2)
                 layer_loss = torch.mean(torch.frobenius_norm(a - b, dim=-1))
-                print("Not ReLU")
+                # print("Not ReLU")
             loss += layer_loss 
 
         return loss / len(list_attentions_a)
