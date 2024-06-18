@@ -360,6 +360,20 @@ class Appr(Inc_Learning_Appr):
                 b_w = b.sum(dim=2).view(b.shape[0], -1)
                 a = torch.cat([a_h, a_w], dim=-1)
                 b = torch.cat([b_h, b_w], dim=-1)
+
+            elif collapse_channels == "hybrid":
+                # New hybrid approach combining channel, width, and height information
+                a_channel = a.sum(dim=1).view(a.shape[0], -1)
+                b_channel = b.sum(dim=1).view(b.shape[0], -1)
+                a_width = a.sum(dim=2).view(a.shape[0], -1)
+                b_width = b.sum(dim=2).view(b.shape[0], -1)
+                a_height = a.sum(dim=3).view(a.shape[0], -1)
+                b_height = b.sum(dim=3).view(b.shape[0], -1)               
+            
+                # Concatenate along the feature dimension
+                a = torch.cat([a_channel, a_width, a_height], dim=-1)
+                b = torch.cat([b_channel, b_width, b_height], dim=-1)
+                
             elif collapse_channels == 'pixel':
                 pass
             else:
