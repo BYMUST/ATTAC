@@ -329,7 +329,6 @@ class Appr(Inc_Learning_Appr):
             if collapse_channels == "channels":
                 a = a.sum(dim=1).view(a.shape[0], -1)  # shape of (b, w * h)
                 b = b.sum(dim=1).view(b.shape[0], -1)
-                print("channels")
 
             elif collapse_channels == "width":
                 a = a.sum(dim=2).view(a.shape[0], -1)  # shape of (b, c * h)
@@ -426,9 +425,6 @@ class Appr(Inc_Learning_Appr):
                     self._n_classes / self._task_size
                 )
                 plastic_loss += self.pod(old_attention_list, attention_list) * self.plast_mu * pod_spatial_factor
-
-                print(plastic_loss)
-
                 if self.distance_metric == 'JS':
                     plastic_loss += self.plasticity_loss(old_attention_list, attention_list)*self.plast_mu
                 elif self.distance_metric == 'cosine':
