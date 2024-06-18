@@ -366,7 +366,8 @@ class Appr(Inc_Learning_Appr):
                 raise ValueError("Unknown method to collapse: {}".format(collapse_channels))
 
             if not self.sym:
-                asym_choice = torch.nn.ReLU(inplace=True)
+                # asym_choice = torch.nn.ReLU(inplace=True)
+                asym_choice = torch.nn.LeakyReLU(negative_slope=0.01, inplace=False)
                 if normalize:
                     a = F.normalize(a, dim=1, p=2)
                     b = F.normalize(b, dim=1, p=2)
