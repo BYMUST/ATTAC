@@ -376,7 +376,9 @@ class Appr(Inc_Learning_Appr):
         for images, targets in trn_loader:
             loss = 0.
             plastic_loss = 0.
-
+            # Initialize old_attention_list and attention_list
+            old_attention_list = []
+            attention_list = []
             # Forward old model
             targets_old = None
             if t > 0:
