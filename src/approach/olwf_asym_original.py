@@ -301,7 +301,7 @@ class Appr(Inc_Learning_Appr):
     def pod(self,
         list_attentions_a,
         list_attentions_b,
-        collapse_channels="spatial",
+        collapse_channels="AxiSagiCoroFusion",
         normalize=True
     ):
         """Pooled Output Distillation.
@@ -361,18 +361,29 @@ class Appr(Inc_Learning_Appr):
                 a = torch.cat([a_h, a_w], dim=-1)
                 b = torch.cat([b_h, b_w], dim=-1)
 
-            elif collapse_channels == "hybrid":
-                # New hybrid approach combining channel, width, and height information
-                a_channel = a.sum(dim=1).view(a.shape[0], -1)
-                b_channel = b.sum(dim=1).view(b.shape[0], -1)
-                a_width = a.sum(dim=2).view(a.shape[0], -1)
-                b_width = b.sum(dim=2).view(b.shape[0], -1)
-                a_height = a.sum(dim=3).view(a.shape[0], -1)
-                b_height = b.sum(dim=3).view(b.shape[0], -1)               
-            
-                # Concatenate along the feature dimension
-                a = torch.cat([a_channel, a_width, a_height], dim=-1)
-                b = torch.cat([b_channel, b_width, b_height], dim=-1)
+            elif collapse_channels == "AxiSagiCoroFusion":
+                # Symbolically aligning with anatomical planes: Axial, Sagittal, Coronal
+                # For 2D images, we interpret channels as feature complexity akin to different 'views'.
+                # Width may be thought of as a pseudo-coronal aggregation (left-right),
+                # Height as a pseudo-sagittal aggregation (top-bottom), 
+                # and Channels retain their role as feature diversity, loosely aligned with axial depth.
+                
+                # Pseudo-Axial aggregation (feature complexity across all spatial locations)
+                a_axial = a.sum(dim=1).view(a.shape[0], -1)
+                b_axial = b.sum(dim=1).view(b.shape[0], -1)
+                
+                # Pseudo-Sagittal aggregation (vertical structure summary)
+                a_sagittal = a.sum(dim=3).view(a.shape[0], -1)
+                b_sagittal = b.sum(dim=3).view(b.shape[0], -1)
+                
+                # Pseudo-Coronal aggregation (horizontal structure summary)
+                a_coronal = a.sum(dim=2).view(a.shape[0], -1)
+                b_coronal = b.sum(dim=2).view(b.shape[0], -1)
+                
+                
+                # Concatenate the 'views' along the feature dimension
+                a = torch.cat([a_axial, a_sagittal, a_coronal], dim=-1)
+                b = torch.cat([b_axial, b_sagittal, b_coronal], dim=-1)
                 
             elif collapse_channels == 'pixel':
                 pass
