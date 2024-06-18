@@ -301,7 +301,7 @@ class Appr(Inc_Learning_Appr):
     def pod(self,
         list_attentions_a,
         list_attentions_b,
-        collapse_channels="spatial",
+        collapse_channels="channels",
         normalize=True
     ):
         """Pooled Output Distillation.
@@ -324,10 +324,12 @@ class Appr(Inc_Learning_Appr):
 
             a = torch.pow(a, 2)
             b = torch.pow(b, 2)
+            print("collapse_channels")
 
             if collapse_channels == "channels":
                 a = a.sum(dim=1).view(a.shape[0], -1)  # shape of (b, w * h)
                 b = b.sum(dim=1).view(b.shape[0], -1)
+
             elif collapse_channels == "width":
                 a = a.sum(dim=2).view(a.shape[0], -1)  # shape of (b, c * h)
                 b = b.sum(dim=2).view(b.shape[0], -1)
