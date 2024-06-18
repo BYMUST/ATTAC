@@ -377,8 +377,7 @@ class Appr(Inc_Learning_Appr):
             loss = 0.
             plastic_loss = 0.
             # Initialize old_attention_list and attention_list
-            old_attention_list = []
-            attention_list = []
+
             # Forward old model
             targets_old = None
             if t > 0:
@@ -399,18 +398,20 @@ class Appr(Inc_Learning_Appr):
             
 
 
+            if t > 0:
             #     """ Headwise asymmetric loss (4 possible settings):
             #     for symmetric version of the loss, set asymmetric_loss = False
             #     for simple asym version, set asymmetric_loss = True , i.e., sparse_reg = None by default)
             #     for asym version with sparse attention with mean of |b|, set sparse_reg = 'mean'
             #     for asym version with sparse attention with norm of |b|, set sparse_reg = 'norm'
             #     """
-            pod_spatial_factor = self._pod_spatial_factor * math.sqrt(
+                pod_spatial_factor = self._pod_spatial_factor * math.sqrt(
                     self._n_classes / self._task_size
                 )
-            plastic_loss += self.pod(old_attention_list, attention_list) * self.plast_mu * pod_spatial_factor
-            print("add pod")
-            if t > 0:
+                plastic_loss += self.pod(old_attention_list, attention_list) * self.plast_mu * pod_spatial_factor
+
+                print("plastic_loss")
+
                 if self.distance_metric == 'JS':
                     plastic_loss += self.plasticity_loss(old_attention_list, attention_list)*self.plast_mu
                 elif self.distance_metric == 'cosine':
