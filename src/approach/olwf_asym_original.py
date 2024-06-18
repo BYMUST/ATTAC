@@ -403,10 +403,11 @@ class Appr(Inc_Learning_Appr):
             #     for asym version with sparse attention with mean of |b|, set sparse_reg = 'mean'
             #     for asym version with sparse attention with norm of |b|, set sparse_reg = 'norm'
             #     """
-            #     # pod_spatial_factor = self._pod_spatial_factor * math.sqrt(
-            #     #     self._n_classes / self._task_size
-            #     # )
-            #     # plastic_loss += self.pod(old_attention_list, attention_list) * self.plast_mu * pod_spatial_factor
+            pod_spatial_factor = self._pod_spatial_factor * math.sqrt(
+                    self._n_classes / self._task_size
+                )
+            plastic_loss += self.pod(old_attention_list, attention_list) * self.plast_mu * pod_spatial_factor
+            print("add pod")
             if t > 0:
                 if self.distance_metric == 'JS':
                     plastic_loss += self.plasticity_loss(old_attention_list, attention_list)*self.plast_mu
