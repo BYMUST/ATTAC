@@ -284,6 +284,28 @@ class Appr(Inc_Learning_Appr):
         return loss.mean()
 
 
+    def plasticity_loss_mean_variance(self, old_attention_list, attention_list):
+        totloss = 0.
+        for i in range(len(attention_list)):
+            # 计算当前注意力分布的均值和方差
+            current_mean = torch.mean(attention_list[i], dim=(1, 2))
+            current_variance = torch.var(attention_list[i], dim=(1, 2))
+
+            # 计算旧注意力分布的均值和方差
+            old_mean = torch.mean(old_attention_list[i], dim=(1, 2))
+            old_variance = torch.var(old_attention_list[i], dim=(1, 2))
+
+            # 计算均值和方差的差异
+            mean_diff = torch.mean(torch.abs(current_mean - old_mean))
+            variance_diff = torch.mean(torch.abs(current_variance - old_variance))
+
+            # 定义正则化项
+            reg_loss = mean_diff + variance_diff
+
+            # 累加到总损失
+            totloss += reg_loss.mean()
+
+        return totloss
     
     def permissive_relu(self, att_diff, asym_choice):
         relu_out_ = asym_choice(att_diff)
@@ -464,8 +486,8 @@ class Appr(Inc_Learning_Appr):
                     plastic_loss += self.plasticity_loss_mmi(old_attention_list, attention_list)*self.plast_mu
                 elif self.distance_metric == 'renyi':
                     plastic_loss += self.plasticity_loss_renyi(old_attention_list, attention_list)*self.plast_mu
-                elif self.distance_metric == 'renyi_ALL':
-                    plastic_loss += self.plasticity_loss_renyi_ATTALL(old_attention_list, attention_list)*self.plast_mu                    
+                elif self.distance_metric == 'mean_variance':
+                    plastic_loss += self.plasticity_loss_mean_variance(old_attention_list, attention_list)*self.plast_mu                    
                 elif self.distance_metric == 'hellinger':
                     plastic_loss += self.plasticity_loss_hellinger(old_attention_list, attention_list)*self.plast_mu
                 elif self.distance_metric == 'variation':
