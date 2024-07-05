@@ -31,7 +31,7 @@ class Appr(Inc_Learning_Appr):
         self.plast_mu = plast_mu
         self._task_size = 0
         self._n_classes = 0
-        self._pod_spatial_factor = 3.
+        self._pod_spatial_factor = 1.
         self.sym = sym
         self.distance_metric=distance_metric
         self.alpha = alpha
