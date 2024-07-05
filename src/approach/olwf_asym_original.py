@@ -498,8 +498,8 @@ class Appr(Inc_Learning_Appr):
                     raise ValueError(f'Invalid distance metric: {self.distance_metric}')
             loss += self.criterion(t, outputs, targets.to(self.device), targets_old)
             if is_printed <3:  # 如果还未打印过
-                print(f"这是我编写的程序[Task {t}] l:{loss:.3f} p:{plastic_loss:.3f}")
-                print(plastic_loss)
+                # print(f"这是我编写的程序[Task {t}] l:{loss:.3f} p:{plastic_loss:.3f}")
+                # print(plastic_loss)
                 is_printed = is_printed + 1  # 标记已打印过
             loss += plastic_loss
 
