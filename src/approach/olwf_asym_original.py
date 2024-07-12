@@ -417,16 +417,16 @@ class Appr(Inc_Learning_Appr):
                 # asym_choice = torch.nn.LeakyReLU(negative_slope=0.05, inplace=True)
                 asym_choice = torch.nn.SiLU(inplace=True)
                 if normalize:
-                    a = F.normalize(a, dim=1, p=2)
-                    b = F.normalize(b, dim=1, p=2)
+                    a = F.normalize(a, dim=2, p=2)
+                    b = F.normalize(b, dim=2, p=2)
                 diff = a-b
                 relu_out = asym_choice(diff)  
                 layer_loss = torch.mean(torch.frobenius_norm(relu_out, dim=-1))
                 # print("ReLU")
             else:
                 if normalize:
-                    a = F.normalize(a, dim=1, p=2)
-                    b = F.normalize(b, dim=1, p=2)
+                    a = F.normalize(a, dim=2, p=2)
+                    b = F.normalize(b, dim=2, p=2)
                 layer_loss = torch.mean(torch.frobenius_norm(a - b, dim=-1))
                 # print("Not ReLU")
             loss += layer_loss 
