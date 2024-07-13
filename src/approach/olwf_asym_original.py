@@ -300,7 +300,7 @@ class Appr(Inc_Learning_Appr):
             variance_diff = torch.mean(torch.abs(current_variance - old_variance))
 
             # 定义正则化项
-            reg_loss = mean_diff*mean_diff + variance_diff
+            reg_loss = variance_diff
 
             # 累加到总损失
             totloss += reg_loss.mean()
@@ -404,8 +404,8 @@ class Appr(Inc_Learning_Appr):
                 
                 
                 # Concatenate the 'views' along the feature dimension
-                a = torch.cat([2*a_axial, a_sagittal, a_coronal], dim=-1)
-                b = torch.cat([2*b_axial, b_sagittal, b_coronal], dim=-1)
+                a = torch.cat([a_axial, 2*a_sagittal, a_coronal], dim=-1)
+                b = torch.cat([b_axial, 2*b_sagittal, b_coronal], dim=-1)
                 
             elif collapse_channels == 'pixel':
                 pass
