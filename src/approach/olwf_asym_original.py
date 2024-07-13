@@ -404,8 +404,8 @@ class Appr(Inc_Learning_Appr):
                 
                 
                 # Concatenate the 'views' along the feature dimension
-                a = torch.cat([a_axial, a_sagittal, a_coronal], dim=-1)
-                b = torch.cat([b_axial, b_sagittal, b_coronal], dim=-1)
+                a = torch.cat([2*a_axial, a_sagittal, a_coronal], dim=-1)
+                b = torch.cat([2*b_axial, b_sagittal, b_coronal], dim=-1)
                 
             elif collapse_channels == 'pixel':
                 pass
@@ -417,16 +417,16 @@ class Appr(Inc_Learning_Appr):
                 # asym_choice = torch.nn.LeakyReLU(negative_slope=0.05, inplace=True)
                 asym_choice = torch.nn.SiLU(inplace=True)
                 if normalize:
-                    a = F.normalize(a, dim=2, p=2)
-                    b = F.normalize(b, dim=2, p=2)
+                    a = F.normalize(a, dim=1, p=2)
+                    b = F.normalize(b, dim=1, p=2)
                 diff = a-b
                 relu_out = asym_choice(diff)  
                 layer_loss = torch.mean(torch.frobenius_norm(relu_out, dim=-1))
                 # print("ReLU")
             else:
                 if normalize:
-                    a = F.normalize(a, dim=2, p=2)
-                    b = F.normalize(b, dim=2, p=2)
+                    a = F.normalize(a, dim=1, p=2)
+                    b = F.normalize(b, dim=1, p=2)
                 layer_loss = torch.mean(torch.frobenius_norm(a - b, dim=-1))
                 # print("Not ReLU")
             loss += layer_loss 
