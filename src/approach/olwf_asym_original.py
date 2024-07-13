@@ -300,7 +300,7 @@ class Appr(Inc_Learning_Appr):
             variance_diff = torch.mean(torch.abs(current_variance - old_variance))
 
             # 定义正则化项
-            reg_loss = mean_diff + variance_diff
+            reg_loss = mean_diff*mean_diff + variance_diff
 
             # 累加到总损失
             totloss += reg_loss.mean()
